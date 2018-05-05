@@ -19,7 +19,7 @@
     <color name="colorPrimary">#ff5722</color>
     <color name="colorPrimaryDark">#bf360c</color>
     <color name="colorAccent">#009688</color>
-    <color name="colorPrimaryText">#212121</color>
+    <color name="colorPrimaryText">#455a64</color>
     <color name="colorPrimaryTextLight">#FFFFFF</color>
 
     <color name="photo_placeholder">#ccc</color>

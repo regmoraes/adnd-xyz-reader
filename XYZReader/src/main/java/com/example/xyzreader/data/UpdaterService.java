@@ -58,40 +58,31 @@ public class UpdaterService extends IntentService {
         Call<List<Article>> getArticles = Network.getArticlesRestService().getArticles();
 
         getArticles.enqueue(new Callback<List<Article>>() {
-                                @Override
-                                public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
-                                    for (Article article : response.body()) {
+            @Override
+            public void onResponse(Call<List<Article>> call, Response<List<Article>> response) {
 
-                                        ContentValues values = new ContentValues();
-                                        values.put(ItemsContract.Items.SERVER_ID, article.getId());
-                                        values.put(ItemsContract.Items.AUTHOR, article.getAuthor());
-                                        values.put(ItemsContract.Items.TITLE, article.getTitle());
-                                        values.put(ItemsContract.Items.BODY, article.getBody());
-                                        values.put(ItemsContract.Items.THUMB_URL, article.getThumb());
-                                        values.put(ItemsContract.Items.PHOTO_URL, article.getPhoto());
-                                        values.put(ItemsContract.Items.ASPECT_RATIO, article.getAspectRatio());
-                                        values.put(ItemsContract.Items.PUBLISHED_DATE, article.getPublishedDate());
+                try {
+                    for (Article article : response.body()) {
+                        ContentValues values = ArticleMapper.toContentValues(article);
+                        cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
+                    }
 
-                                        cpo.add(ContentProviderOperation.newInsert(dirUri).withValues(values).build());
-                                    }
+                    getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
 
-                                    try {
-                                        getContentResolver().applyBatch(ItemsContract.CONTENT_AUTHORITY, cpo);
-                                    } catch (RemoteException | OperationApplicationException e) {
-                                        e.printStackTrace();
-                                    }
+                } catch (RemoteException | NullPointerException | OperationApplicationException e) {
+                    e.printStackTrace();
+                }
 
-                                    sendStickyBroadcast(
-                                            new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
-                                }
+                sendStickyBroadcast(new Intent(BROADCAST_ACTION_STATE_CHANGE)
+                        .putExtra(EXTRA_REFRESHING, false));
+            }
 
-                                @Override
-                                public void onFailure(Call<List<Article>> call, Throwable t) {
+            @Override
+            public void onFailure(Call<List<Article>> call, Throwable t) {
 
-                                    sendStickyBroadcast(
-                                            new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
-                                }
-                            }
-        );
+                sendStickyBroadcast(
+                        new Intent(BROADCAST_ACTION_STATE_CHANGE).putExtra(EXTRA_REFRESHING, false));
+            }
+        });
     }
 }

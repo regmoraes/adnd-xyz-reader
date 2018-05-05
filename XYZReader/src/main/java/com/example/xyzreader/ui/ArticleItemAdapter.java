@@ -6,8 +6,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import com.example.xyzreader.util.DateUtils;
 
 /**
  * Copyright {2018} {Rômulo Eduardo G. Moraes}
@@ -29,12 +23,6 @@ import java.util.GregorianCalendar;
 public class ArticleItemAdapter extends RecyclerView.Adapter<ArticleItemAdapter.ViewHolder> {
 
     private static final String TAG = ArticleListActivity.class.toString();
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
-    // Use default locale format
-    private SimpleDateFormat outputFormat = new SimpleDateFormat();
-    // Most time functions can only handle 1902 - 2037
-    private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
 
     private Cursor mCursor;
 
@@ -63,17 +51,6 @@ public class ArticleItemAdapter extends RecyclerView.Adapter<ArticleItemAdapter.
         return new ViewHolder(view);
     }
 
-    private Date parsePublishedDate() {
-        try {
-            String date = mCursor.getString(ArticleLoader.Query.PUBLISHED_DATE);
-            return dateFormat.parse(date);
-        } catch (ParseException ex) {
-            Log.e(TAG, ex.getMessage());
-            Log.i(TAG, "passing today's date");
-            return new Date();
-        }
-    }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
@@ -85,18 +62,9 @@ public class ArticleItemAdapter extends RecyclerView.Adapter<ArticleItemAdapter.
 
         holder.titleView.setText(title);
         holder.authorView.setText(author);
-
-        Date publishedDate = parsePublishedDate();
-
-        if (!publishedDate.before(START_OF_EPOCH.getTime())) {
-
-            holder.dateView.setText(DateUtils.getRelativeTimeSpanString(
-                    publishedDate.getTime(),
-                    System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                    DateUtils.FORMAT_ABBREV_ALL).toString());
-        } else {
-            holder.dateView.setText(outputFormat.format(publishedDate));
-        }
+        holder.dateView.setText(DateUtils.parsePublishedDate(
+                mCursor.getString(ArticleLoader.Query.PUBLISHED_DATE))
+        );
 
         Glide.with(holder.thumbnailView.getContext())
                 .load(imageUrl)

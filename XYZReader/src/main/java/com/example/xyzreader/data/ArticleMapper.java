@@ -1,5 +1,6 @@
 package com.example.xyzreader.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 public class ArticleMapper {
@@ -17,5 +18,20 @@ public class ArticleMapper {
 		article.setPublishedDate(cursor.getString(ArticleLoader.Query.PUBLISHED_DATE));
 
 		return article;
+	}
+
+	public static ContentValues toContentValues(Article article) {
+
+		ContentValues values = new ContentValues();
+		values.put(ItemsContract.Items.SERVER_ID, article.getId());
+		values.put(ItemsContract.Items.AUTHOR, article.getAuthor());
+		values.put(ItemsContract.Items.TITLE, article.getTitle());
+		values.put(ItemsContract.Items.BODY, article.getBody());
+		values.put(ItemsContract.Items.THUMB_URL, article.getThumb());
+		values.put(ItemsContract.Items.PHOTO_URL, article.getPhoto());
+		values.put(ItemsContract.Items.ASPECT_RATIO, article.getAspectRatio());
+		values.put(ItemsContract.Items.PUBLISHED_DATE, article.getPublishedDate());
+
+		return values;
 	}
 }

@@ -49,15 +49,17 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         viewBinding = DataBindingUtil.setContentView(this, R.layout.activity_article_list);
 
+        setSupportActionBar(viewBinding.toolbar);
+
         int columnCount = getResources().getInteger(R.integer.list_column_count);
 
-        StaggeredGridLayoutManager sglm =
+        StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
 
         adapter = new ArticleItemAdapter(null, this);
         adapter.setHasStableIds(true);
 
-        viewBinding.recyclerView.setLayoutManager(sglm);
+        viewBinding.recyclerView.setLayoutManager(layoutManager);
         viewBinding.recyclerView.setAdapter(adapter);
     }
 
