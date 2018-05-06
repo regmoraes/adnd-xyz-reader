@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Copyright {2018} {Rômulo Eduardo G. Moraes}
+ **/
 public class Article implements Parcelable {
 
     public Article() {

@@ -5,15 +5,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,11 +29,10 @@ import com.example.xyzreader.databinding.FragmentArticleDetailBinding;
  * tablets) or a {@link ArticleDetailActivity} on handsets.
  */
 public class ArticleDetailFragment extends Fragment {
-    private static final String TAG = "ArticleDetailFragment";
     public static final String ARG_ARTICLE = "article";
 
     private Article mArticle;
-
+    private ParentActivityListener parentActivityListener;
     private FragmentArticleDetailBinding viewBinding;
 
     /**
@@ -66,7 +60,6 @@ public class ArticleDetailFragment extends Fragment {
         if (getArguments().containsKey(ARG_ARTICLE)) {
             mArticle = getArguments().getParcelable(ARG_ARTICLE);
         }
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -85,9 +78,15 @@ public class ArticleDetailFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        Log.d(TAG, "onCreateOptionsMenu");
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(getActivity() != null && getActivity() instanceof ParentActivityListener) {
+            parentActivityListener = (ParentActivityListener) getActivity();
+        } else {
+            throw new ClassCastException(getActivity().getClass().getSimpleName()
+                    + " must implement " + ParentActivityListener.class.getSimpleName());
+        }
     }
 
     private void bindViews() {
@@ -97,6 +96,8 @@ public class ArticleDetailFragment extends Fragment {
         final String body = Html.fromHtml(mArticle.getBody()).toString();
         final String photo = mArticle.getPhoto();
 
+        viewBinding.articleBody.setText(body);
+
         Glide.with(this)
                 .setDefaultRequestOptions(
                         new RequestOptions()
@@ -105,48 +106,48 @@ public class ArticleDetailFragment extends Fragment {
                                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 )
                 .load(photo)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                    Target<Drawable> target, boolean isFirstResource) {
-                            startPostponedEnterTransition();
-                            return false;
-                        }
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                Target<Drawable> target, boolean isFirstResource) {
+                        startPostponedEnterTransition();
+                        return false;
+                    }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            startPostponedEnterTransition();
-                            return false;
-                        }
-                    })
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        startPostponedEnterTransition();
+                        return false;
+                    }
+                })
                 .into(viewBinding.photo);
+
+        viewBinding.toolbar.setNavigationOnClickListener(view ->
+                parentActivityListener.onHomeClicked());
 
         viewBinding.collapsingToolbar.setTitle(title);
         viewBinding.collapsingToolbar.setSubtitle(author);
-        viewBinding.articleBody.setText(body);
 
-        viewBinding.shareFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-                        .setType("text/plain")
-                        .setText(mArticle.getBody())
-                        .getIntent(), getString(R.string.action_share)));
-            }
-        });
+        viewBinding.shareFab.setOnClickListener(view ->
+                startActivity(Intent.createChooser(
+                        ShareCompat.IntentBuilder.from(getActivity())
+                                .setType("text/plain")
+                                .setText(mArticle.getBody())
+                                .getIntent(), getString(R.string.action_share))));
     }
 
     public void prepareAnimations() {
 
-        viewBinding.appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-              if (appBarLayout.getHeight() / 2 < -verticalOffset) {
-                    viewBinding.shareFab.setVisibility(View.GONE);
-                } else {
-                    viewBinding.shareFab.setVisibility(View.VISIBLE);
-                }
+        viewBinding.appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (appBarLayout.getHeight() / 2 < -verticalOffset) {
+                viewBinding.shareFab.setVisibility(View.GONE);
+            } else {
+                viewBinding.shareFab.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    interface ParentActivityListener {
+        void onHomeClicked();
     }
 }

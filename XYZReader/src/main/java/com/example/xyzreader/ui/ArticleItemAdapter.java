@@ -22,8 +22,6 @@ import com.example.xyzreader.util.DateUtils;
  **/
 public class ArticleItemAdapter extends RecyclerView.Adapter<ArticleItemAdapter.ViewHolder> {
 
-    private static final String TAG = ArticleListActivity.class.toString();
-
     private Cursor mCursor;
 
     private AdapterClickListener listener;
@@ -62,7 +60,7 @@ public class ArticleItemAdapter extends RecyclerView.Adapter<ArticleItemAdapter.
 
         holder.titleView.setText(title);
         holder.authorView.setText(author);
-        holder.dateView.setText(DateUtils.parsePublishedDate(
+        holder.dateView.setText(DateUtils.formatPublishedDate(
                 mCursor.getString(ArticleLoader.Query.PUBLISHED_DATE))
         );
 

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/XYZReader/XYZReader.iml" filepath="$PROJECT_DIR$/XYZReader/XYZReader.iml" />
       <module fileurl="file://$PROJECT_DIR$/adnd-xyz-reader.iml" filepath="$PROJECT_DIR$/adnd-xyz-reader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/adnd-xyz-reader.iml" filepath="$PROJECT_DIR$/.idea/adnd-xyz-reader.iml" />
     </modules>
   </component>
 </project>

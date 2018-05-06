@@ -23,7 +23,7 @@ public class DateUtils {
     // Most time functions can only handle 1902 - 2037
     public static final GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
 
-    public static String parsePublishedDate(String publishedDate) {
+    public static String formatPublishedDate(String publishedDate) {
         try {
 
             Date date = dateFormat.parse(publishedDate);

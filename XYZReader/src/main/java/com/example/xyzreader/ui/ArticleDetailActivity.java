@@ -12,9 +12,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.ViewGroup;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.Article;
@@ -27,11 +25,11 @@ import com.example.xyzreader.databinding.ActivityArticleDetailBinding;
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor>,
+        ArticleDetailFragment.ParentActivityListener {
 
     private Cursor mCursor;
     private long mStartId;
-    public boolean toolbarIsSet;
 
     private MyPagerAdapter mPagerAdapter;
     private ActivityArticleDetailBinding viewBinding;
@@ -120,5 +118,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         public int getCount() {
             return (mCursor != null) ? mCursor.getCount() : 0;
         }
+    }
+
+    @Override
+    public void onHomeClicked() {
+        finish();
     }
 }
