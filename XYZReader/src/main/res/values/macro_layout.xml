@@ -16,10 +16,14 @@
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
 
     <dimen name="fab_elevation">6dp</dimen>
-    <dimen name="fab_press_translation_z">8dp</dimen>
+    <dimen name="fab_press_translation_z">12dp</dimen>
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
 
     <dimen name="cardView_margin">4dp</dimen>
+    <dimen name="cardView_elevation">2dp</dimen>
     <dimen name="cardView_item_margin">8dp</dimen>
+    <dimen name="cardView_press_translation_z">8dp</dimen>
+
+    <dimen name="appBar_elevation">4dp</dimen>
 </resources>
