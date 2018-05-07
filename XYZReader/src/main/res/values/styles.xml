@@ -22,25 +22,26 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
+
     </style>
 
     <style name="Xyz.Theme.Transparent">
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="Xyz.CollapsingToolbar" parent="Widget.Design.CollapsingToolbar">
-        <item name="contentScrim">?colorPrimary</item>
+    <style name="Xyz.CollapsingToolbar" parent="Widget.Design.CollapsingToolbar.Subtitle">
+        <item name="contentScrim">@color/article_photo_frame</item>
         <item name="expandedTitleTextAppearance">@android:color/transparent</item>
         <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
         <item name="statusBarScrim">@android:color/transparent</item>
         <item name="android:fitsSystemWindows">true</item>
     </style>
 
-    <style name="Xyz.FloatingActionButton" parent="Widget.Design.FloatingActionButton">
+    <style name="Xyz.FloatingActionButton" parent="Xyz.Theme">
+        <item name="android:layout_width">@dimen/fab_size</item>
+        <item name="android:layout_height">@dimen/fab_size</item>
         <item name="android:layout_marginBottom">@dimen/fab_margin</item>
         <item name="android:layout_marginEnd">@dimen/fab_margin</item>
-        <item name="android:contentDescription">@string/action_share</item>
         <item name="android:elevation">@dimen/fab_elevation</item>
         <item name="android:stateListAnimator">@animator/fab_state_list_anim</item>
     </style>
@@ -54,6 +55,13 @@
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:fontFamily">serif</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="Xyz.ArticleDetail.CardView" parent="CardView.Light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:elevation">8dp</item>
+        <item name="cardCornerRadius">1dp</item>
     </style>
 
 </resources>

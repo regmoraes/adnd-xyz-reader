@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Xyz.CollapsingToolbar" parent="Widget.Design.CollapsingToolbar.Subtitle">
+        <item name="contentScrim">@color/article_photo_frame</item>
+        <item name="expandedTitleGravity">bottom|center_horizontal</item>
+        <item name="expandedTitleTextAppearance">@android:color/transparent</item>
+        <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
+        <item name="statusBarScrim">@android:color/transparent</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
+    <style name="Xyz.ArticleDetail.CardView" parent="CardView.Light">
+        <item name="android:layout_width">704dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+</resources>

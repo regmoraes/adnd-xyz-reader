@@ -1,12 +1,16 @@
 package com.example.xyzreader.ui;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
+import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +77,7 @@ public class ArticleDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareAnimations();
+        setUpAnimations();
         bindViews();
     }
 
@@ -115,7 +119,11 @@ public class ArticleDetailFragment extends Fragment {
                     }
 
                     @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource, Object model,
+                                                   Target<Drawable> target, DataSource dataSource,
+                                                   boolean isFirstResource) {
+
+                        setUpViewColorsFromImage(resource);
                         startPostponedEnterTransition();
                         return false;
                     }
@@ -136,13 +144,28 @@ public class ArticleDetailFragment extends Fragment {
                                 .getIntent(), getString(R.string.action_share))));
     }
 
-    public void prepareAnimations() {
+    public void setUpViewColorsFromImage(Drawable drawable) {
+
+        Bitmap myBitmap = ((BitmapDrawable) drawable).getBitmap();
+        if (myBitmap != null && !myBitmap.isRecycled()) {
+
+            Palette palette = Palette.from(myBitmap).generate();
+
+            viewBinding.collapsingToolbar.setContentScrimColor(palette
+                    .getDominantColor(getResources().getColor(R.color.colorPrimary)));
+
+            viewBinding.shareFab.setBackgroundTintList(ColorStateList.valueOf(palette
+                    .getVibrantColor(getResources().getColor(R.color.colorAccent))));
+        }
+    }
+
+    private void setUpAnimations() {
 
         viewBinding.appBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (appBarLayout.getHeight() / 2 < -verticalOffset) {
-                viewBinding.shareFab.setVisibility(View.GONE);
+                viewBinding.shareFab.hide();
             } else {
-                viewBinding.shareFab.setVisibility(View.VISIBLE);
+                viewBinding.shareFab.show();
             }
         });
     }
